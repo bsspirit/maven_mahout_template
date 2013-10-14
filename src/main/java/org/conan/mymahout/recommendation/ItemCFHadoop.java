@@ -1,16 +1,12 @@
 package org.conan.mymahout.recommendation;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.mahout.cf.taste.hadoop.item.RecommenderJob;
 import org.conan.mymahout.hdfs.HdfsDAO;
 
-public class UserCFHadoop {
+public class ItemCFHadoop {
 
     private static final String HDFS = "hdfs://192.168.1.210:9000";
-
-    final static int NEIGHBORHOOD_NUM = 2;
-    final static int RECOMMENDER_NUM = 3;
 
     public static void main(String[] args) throws Exception {
         String localFile = "datafile/item.csv";
@@ -20,10 +16,12 @@ public class UserCFHadoop {
         String outFile = outPath + "/part-r-00000";
         String tmpPath = HDFS + "/tmp/" + System.currentTimeMillis();
 
-        Configuration conf = config();
-        HdfsDAO hdfs = new HdfsDAO(conf);
+        JobConf conf = config();
+        HdfsDAO hdfs = new HdfsDAO(HDFS, conf);
         hdfs.rmr(inPath);
+        hdfs.mkdirs(inPath);
         hdfs.copyFile(localFile, inPath);
+        hdfs.ls(inPath);
         hdfs.cat(inFile);
 
         StringBuilder sb = new StringBuilder();
@@ -42,8 +40,8 @@ public class UserCFHadoop {
     }
 
     public static JobConf config() {
-        JobConf conf = new JobConf(UserCFHadoop.class);
-        conf.setJobName("UserCFHadoop");
+        JobConf conf = new JobConf(ItemCFHadoop.class);
+        conf.setJobName("ItemCFHadoop");
         conf.addResource("classpath:/hadoop/core-site.xml");
         conf.addResource("classpath:/hadoop/hdfs-site.xml");
         conf.addResource("classpath:/hadoop/mapred-site.xml");

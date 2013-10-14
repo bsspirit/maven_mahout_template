@@ -31,8 +31,8 @@ public class HdfsDAO {
     public static void main(String[] args) throws IOException {
         JobConf conf = config();
         HdfsDAO hdfs = new HdfsDAO(conf);
-        hdfs.createFile("/tmp/new/text", "Hello world!!");
-        hdfs.cat("/tmp/new/text");
+        hdfs.copyFile("datafile/item.csv", "/tmp/new");
+        hdfs.ls("/tmp/new");
     }        
     
     public static JobConf config(){

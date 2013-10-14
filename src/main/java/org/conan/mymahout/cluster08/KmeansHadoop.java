@@ -1,67 +1,54 @@
 package org.conan.mymahout.cluster08;
 
-import java.io.IOException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.FileInputFormat;
-import org.apache.hadoop.mapred.FileOutputFormat;
-import org.apache.hadoop.mapred.JobClient;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.mahout.clustering.Cluster;
 import org.apache.mahout.clustering.canopy.CanopyDriver;
 import org.apache.mahout.clustering.conversion.InputDriver;
 import org.apache.mahout.clustering.kmeans.KMeansDriver;
-import org.apache.mahout.clustering.kmeans.RandomSeedGenerator;
 import org.apache.mahout.common.AbstractJob;
 import org.apache.mahout.common.distance.DistanceMeasure;
-import org.apache.mahout.common.distance.EuclideanDistanceMeasure;
-import org.apache.mahout.math.VectorWritable;
 import org.apache.mahout.utils.clustering.ClusterDumper;
-import org.conan.mymahout.common.InputMapper;
-import org.conan.mymahout.hdfs.HdfsDAO;
 
 public class KmeansHadoop extends AbstractJob {
 
-    private static final String DIRECTORY_CONTAINING_CONVERTED_INPUT = "data";
-
-    public static void main(String[] args) throws Exception {
-        JobConf conf = new JobConf(KmeansHadoop.class);
-        conf.setJobName("KmeansHadoop");
-        conf.addResource("classpath:/hadoop/core-site.xml");
-        conf.addResource("classpath:/hadoop/hdfs-site.xml");
-        conf.addResource("classpath:/hadoop/mapred-site.xml");
-
-        String inPath = "/user/hdfs/mix_data/";
-        String outPath = "/user/hdfs/mix_data/result/";
-
-        int k = 3;
-        Path input = new Path(inPath);
-        Path output = new Path(outPath);
-
-        HdfsDAO hdfs = new HdfsDAO(conf);
-        hdfs.ls(inPath);
-        
-        hdfs.rmr(outPath);
-        hdfs.ls(inPath);
-        
-        run(conf, input, output, new EuclideanDistanceMeasure(), k, 0.5, 10);
-        
-        
-
-        //
-        // System.out.println("Running with default arguments");
-        // // Path output = new Path("output");
-        // // Configuration conf = new Configuration();
-        // HadoopUtil.delete(conf, output);
-        // run(conf, input, output, new EuclideanDistanceMeasure(), k, 0.5, 10);
-    }
-
-    public int run(String[] args) throws Exception {
-        return 0;
-    }
+//    private static final String DIRECTORY_CONTAINING_CONVERTED_INPUT = "data";
+//
+//    public static void main(String[] args) throws Exception {
+//        JobConf conf = new JobConf(KmeansHadoop.class);
+//        conf.setJobName("KmeansHadoop");
+//        conf.addResource("classpath:/hadoop/core-site.xml");
+//        conf.addResource("classpath:/hadoop/hdfs-site.xml");
+//        conf.addResource("classpath:/hadoop/mapred-site.xml");
+//
+//        String inPath = "/user/hdfs/mix_data/";
+//        String outPath = "/user/hdfs/mix_data/result/";
+//
+//        int k = 3;
+//        Path input = new Path(inPath);
+//        Path output = new Path(outPath);
+//
+//        HdfsDAO hdfs = new HdfsDAO(conf);
+//        hdfs.ls(inPath);
+//        
+//        hdfs.rmr(outPath);
+//        hdfs.ls(inPath);
+//        
+//        run(conf, input, output, new EuclideanDistanceMeasure(), k, 0.5, 10);
+//        
+//        
+//
+//        //
+//        // System.out.println("Running with default arguments");
+//        // // Path output = new Path("output");
+//        // // Configuration conf = new Configuration();
+//        // HadoopUtil.delete(conf, output);
+//        // run(conf, input, output, new EuclideanDistanceMeasure(), k, 0.5, 10);
+//    }
+//
+//    public int run(String[] args) throws Exception {
+//        return 0;
+//    }
 
     // public int run(String[] args) throws Exception {
     // addInputOption();
@@ -135,48 +122,48 @@ public class KmeansHadoop extends AbstractJob {
      * @param maxIterations
      *            the int maximum number of iterations
      */
-    public static void run(JobConf conf, Path input, Path output, DistanceMeasure measure, int k, double convergenceDelta, int maxIterations) throws Exception {
-        Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
-        System.out.println("Preparing Input");
-        new HdfsDAO(conf).rmr(directoryContainingConvertedInput.toString());
-        inputDriver(conf,input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");
-        System.out.println("Running random seed to get initial clusters");
-        Path clusters = new Path(output, "random-seeds");
-        clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
-        clusters = new Path("/user/hdfs/mix_data/result/random-seeds/part-randomSeed");
-        System.out.printf("Running KMeans with k = %d\n", k);
-        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, measure, convergenceDelta, maxIterations, true, 0.0, false);
-        // // run ClusterDumper
-        // Path outGlob = new Path(output, "clusters-*-final");
-        // Path clusteredPoints = new Path(output, "clusteredPoints");
-        // System.out.printf("Dumping out clusters from clusters: %s and clusteredPoints: %s\n",
-        // outGlob, clusteredPoints);
-        // ClusterDumper clusterDumper = new ClusterDumper(outGlob,
-        // clusteredPoints);
-        // clusterDumper.printClusters(null);
-    }
+//    public static void run(JobConf conf, Path input, Path output, DistanceMeasure measure, int k, double convergenceDelta, int maxIterations) throws Exception {
+//        Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
+//        System.out.println("Preparing Input");
+//        new HdfsDAO(conf).rmr(directoryContainingConvertedInput.toString());
+//        inputDriver(conf,input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");
+//        System.out.println("Running random seed to get initial clusters");
+//        Path clusters = new Path(output, "random-seeds");
+//        clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
+//        clusters = new Path("/user/hdfs/mix_data/result/random-seeds/part-randomSeed");
+//        System.out.printf("Running KMeans with k = %d\n", k);
+//        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, measure, convergenceDelta, maxIterations, true, 0.0, false);
+//        // // run ClusterDumper
+//        // Path outGlob = new Path(output, "clusters-*-final");
+//        // Path clusteredPoints = new Path(output, "clusteredPoints");
+//        // System.out.printf("Dumping out clusters from clusters: %s and clusteredPoints: %s\n",
+//        // outGlob, clusteredPoints);
+//        // ClusterDumper clusterDumper = new ClusterDumper(outGlob,
+//        // clusteredPoints);
+//        // clusterDumper.printClusters(null);
+//    }
     
     
-    public static void inputDriver(JobConf conf, Path input, Path output, String vectorClassName) throws IOException, InterruptedException, ClassNotFoundException {
-            conf.set("vector.implementation.class.name", vectorClassName);
-            conf.setOutputKeyClass(Text.class);
-            conf.setOutputValueClass(VectorWritable.class);
-            conf.setOutputFormat(SequenceFileOutputFormat.class);
-            conf.setMapperClass(InputMapper.class);   
-            conf.setNumReduceTasks(0);
-            conf.setJarByClass(InputDriver.class);
-            
-            FileInputFormat.addInputPath(conf, input);
-            FileOutputFormat.setOutputPath(conf, output);
-            
-            JobClient.runJob(conf);
-            System.exit(0);
-            
-//            boolean succeeded = conf.waitForCompletion(true);
-//            if (!succeeded) {
-//              throw new IllegalStateException("Job failed!");
-//            }
-          }
+//    public static void inputDriver(JobConf conf, Path input, Path output, String vectorClassName) throws IOException, InterruptedException, ClassNotFoundException {
+//            conf.set("vector.implementation.class.name", vectorClassName);
+//            conf.setOutputKeyClass(Text.class);
+//            conf.setOutputValueClass(VectorWritable.class);
+//            conf.setOutputFormat(SequenceFileOutputFormat.class);
+//            conf.setMapperClass(InputMapper.class);   
+//            conf.setNumReduceTasks(0);
+//            conf.setJarByClass(InputDriver.class);
+//            
+//            FileInputFormat.addInputPath(conf, input);
+//            FileOutputFormat.setOutputPath(conf, output);
+//            
+//            JobClient.runJob(conf);
+//            System.exit(0);
+//            
+////            boolean succeeded = conf.waitForCompletion(true);
+////            if (!succeeded) {
+////              throw new IllegalStateException("Job failed!");
+////            }
+//          }
 
     /**
      * Run the kmeans clustering job on an input dataset using the given
@@ -207,18 +194,24 @@ public class KmeansHadoop extends AbstractJob {
      * @param maxIterations
      *            the int maximum number of iterations
      */
-    public static void run(Configuration conf, Path input, Path output, DistanceMeasure measure, double t1, double t2, double convergenceDelta, int maxIterations) throws Exception {
-        Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
-        System.out.println("Preparing Input");
-        InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");
-        System.out.println("Running Canopy to get initial clusters");
-        Path canopyOutput = new Path(output, "canopies");
-        CanopyDriver.run(new Configuration(), directoryContainingConvertedInput, canopyOutput, measure, t1, t2, false, 0.0, false);
-        System.out.println("Running KMeans");
-        KMeansDriver.run(conf, directoryContainingConvertedInput, new Path(canopyOutput, Cluster.INITIAL_CLUSTERS_DIR + "-final"), output, measure, convergenceDelta, maxIterations, true, 0.0, false);
-        // run ClusterDumper
-        ClusterDumper clusterDumper = new ClusterDumper(new Path(output, "clusters-*-final"), new Path(output, "clusteredPoints"));
-        clusterDumper.printClusters(null);
+//    public static void run(Configuration conf, Path input, Path output, DistanceMeasure measure, double t1, double t2, double convergenceDelta, int maxIterations) throws Exception {
+//        Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
+//        System.out.println("Preparing Input");
+//        InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");
+//        System.out.println("Running Canopy to get initial clusters");
+//        Path canopyOutput = new Path(output, "canopies");
+//        CanopyDriver.run(new Configuration(), directoryContainingConvertedInput, canopyOutput, measure, t1, t2, false, 0.0, false);
+//        System.out.println("Running KMeans");
+//        KMeansDriver.run(conf, directoryContainingConvertedInput, new Path(canopyOutput, Cluster.INITIAL_CLUSTERS_DIR + "-final"), output, measure, convergenceDelta, maxIterations, true, 0.0, false);
+//        // run ClusterDumper
+//        ClusterDumper clusterDumper = new ClusterDumper(new Path(output, "clusters-*-final"), new Path(output, "clusteredPoints"));
+//        clusterDumper.printClusters(null);
+//    }
+
+    @Override
+    public int run(String[] args) throws Exception {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     // public static void main(String[] args) throws IOException,
