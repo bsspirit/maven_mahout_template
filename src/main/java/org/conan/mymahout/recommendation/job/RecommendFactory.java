@@ -44,6 +44,12 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
+/**
+ * 
+ * @author bsspirit@gmail.com
+ * {@link http://blog.fens.me/mahout-recommendation-api/} 
+ *
+ */
 public final class RecommendFactory {
 
     /**

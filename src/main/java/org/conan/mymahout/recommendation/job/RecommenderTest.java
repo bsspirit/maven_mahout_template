@@ -18,6 +18,12 @@ import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.apache.mahout.common.RandomUtils;
 
+/**
+ * 
+ * @author bsspirit@gmail.com
+ * {@link http://blog.fens.me/mahout-recommendation-api/} 
+ *
+ */
 public class RecommenderTest {
 
     final static int NEIGHBORHOOD_NUM = 2;
