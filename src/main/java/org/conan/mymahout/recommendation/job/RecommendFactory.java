@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.digester.parser.GenericParser;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.DataModelBuilder;
 import org.apache.mahout.cf.taste.eval.IRStatistics;
@@ -31,9 +32,12 @@ import org.apache.mahout.cf.taste.impl.recommender.knn.Optimizer;
 import org.apache.mahout.cf.taste.impl.recommender.slopeone.SlopeOneRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.svd.Factorizer;
 import org.apache.mahout.cf.taste.impl.recommender.svd.SVDRecommender;
+import org.apache.mahout.cf.taste.impl.similarity.CityBlockSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.EuclideanDistanceSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.GenericUserSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.LogLikelihoodSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.SpearmanCorrelationSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.TanimotoCoefficientSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.UncenteredCosineSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
@@ -46,9 +50,9 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
 /**
  * 
- * @author bsspirit@gmail.com
- * {@link http://blog.fens.me/mahout-recommendation-api/} 
- *
+ * @author bsspirit@gmail.com {@link http
+ *         ://blog.fens.me/mahout-recommendation-api/}
+ * 
  */
 public final class RecommendFactory {
 
@@ -76,7 +80,7 @@ public final class RecommendFactory {
      * similarity
      */
     public enum SIMILARITY {
-        PEARSON, EUCLIDEAN, COSINE, TANIMOTO, LOGLIKELIHOOD, FARTHEST_NEIGHBOR_CLUSTER, NEAREST_NEIGHBOR_CLUSTER
+        PEARSON, EUCLIDEAN, COSINE, TANIMOTO, LOGLIKELIHOOD, SPEARMAN, CITYBLOCK, FARTHEST_NEIGHBOR_CLUSTER, NEAREST_NEIGHBOR_CLUSTER
     }
 
     public static UserSimilarity userSimilarity(SIMILARITY type, DataModel m) throws TasteException {
@@ -89,6 +93,10 @@ public final class RecommendFactory {
             return new TanimotoCoefficientSimilarity(m);
         case LOGLIKELIHOOD:
             return new LogLikelihoodSimilarity(m);
+        case SPEARMAN:
+            return new SpearmanCorrelationSimilarity(m);
+        case CITYBLOCK:
+            return new CityBlockSimilarity(m);
         case EUCLIDEAN:
         default:
             return new EuclideanDistanceSimilarity(m);
@@ -97,11 +105,19 @@ public final class RecommendFactory {
 
     public static ItemSimilarity itemSimilarity(SIMILARITY type, DataModel m) throws TasteException {
         switch (type) {
+        case PEARSON:
+            return new PearsonCorrelationSimilarity(m);
+        case COSINE:
+            return new UncenteredCosineSimilarity(m);
+        case TANIMOTO:
+            return new TanimotoCoefficientSimilarity(m);
         case LOGLIKELIHOOD:
             return new LogLikelihoodSimilarity(m);
-        case TANIMOTO:
+        case CITYBLOCK:
+            return new CityBlockSimilarity(m);
+        case EUCLIDEAN:
         default:
-            return new TanimotoCoefficientSimilarity(m);
+            return new EuclideanDistanceSimilarity(m);
         }
     }
 
@@ -212,7 +228,6 @@ public final class RecommendFactory {
             }
             System.out.println();
         }
-
     }
 
     /**
