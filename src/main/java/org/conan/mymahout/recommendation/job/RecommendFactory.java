@@ -50,9 +50,8 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
 /**
  * 
- * @author bsspirit@gmail.com {@link http
- *         ://blog.fens.me/mahout-recommendation-api/}
- * 
+ * @author bsspirit@gmail.com 
+ * @link http://blog.fens.me/mahout-recommendation-api/
  */
 public final class RecommendFactory {
 

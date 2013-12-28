@@ -7,7 +7,7 @@ import org.conan.mymahout.hdfs.HdfsDAO;
 public class ItemCFHadoop {
 
     private static final String HDFS = "hdfs://192.168.1.210:9000";
-
+    
     public static void main(String[] args) throws Exception {
         String localFile = "datafile/item.csv";
         String inPath = HDFS + "/user/hdfs/userCF";
